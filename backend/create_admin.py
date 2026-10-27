@@ -6,7 +6,7 @@
 # # Password hashing configuration (bcrypt)
 # pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# MONGO_URI = "mongodb+srv://itsupportqtr:EssProject2026@cluster0.rpfueke.mongodb.net/ESS?retryWrites=true&w=majority&appName=Cluster0"
+# MONGO_URI = "mongodb+srv://username:<yourpassword@cluster0.rpfueke.mongodb.net/ESS?retryWrites=true&w=majority&appName=Cluster0"
 
 # async def create_initial_admin():
 #     print("Connecting to MongoDB Atlas...")
