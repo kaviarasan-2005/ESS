@@ -1,0 +1,119 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { fetchFlameGasApplications } from '../services/api';
+
+const ITEM_BASE = 'transition-all duration-700 ease-out motion-reduce:transition-none';
+const FADE_IN = 'translate-y-0 opacity-100';
+const FADE_HIDDEN = 'translate-y-6 opacity-0';
+const HEADING_TEXT = 'text-3xl md:text-4xl lg:text-5xl';
+const ITEM_TEXT = 'text-base md:text-lg lg:text-xl';
+const LIST_GRID = 'grid grid-cols-1 gap-x-16 gap-y-5 md:grid-cols-2';
+const STAGGER_MS = 100;
+const VISIBLE_THRESHOLD = 0.15;
+
+const FlameGasApplicationsSection = () => {
+  const [data, setData] = useState({
+    title: 'Key Applications',
+    applications_list: [
+      'Hydrocarbon and Toxic gas leak detection in process areas',
+      'Flame detection for hazardous area and confined-space protection',
+      'Perimeter and open-path gas monitoring for large tank farms and terminals',
+      'Fire and Gas (F&G) system integration for SIL-rated safety loops',
+      'Compressor station and pipeline facility protection',
+    ],
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    loadApplicationsData();
+  }, []);
+
+  // Trigger reveal animation when section enters viewport
+  useEffect(() => {
+    if (loading || !sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: VISIBLE_THRESHOLD }
+    );
+
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [loading]);
+
+  const loadApplicationsData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetchFlameGasApplications();
+      const content = res?.data?.data || res?.data || res;
+      if (content) {
+        setData((prev) => ({ ...prev, ...content }));
+      }
+    } catch (err) {
+      console.error('Failed to load Flame & Gas applications section:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-64 w-full items-center justify-center bg-white text-black">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-slate-800 border-r-transparent"></div>
+          <p className="mt-2 text-sm text-gray-600">Loading applications...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const items = data.applications_list || [];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="w-full overflow-hidden bg-white px-6 py-16 font-sans text-slate-800 md:px-12 lg:px-20"
+    >
+      <div className="mx-auto max-w-6xl">
+        {/* SECTION HEADING */}
+        {data.title && (
+          <h2
+            className={`mb-12 text-center font-bold tracking-tight text-slate-900 ${HEADING_TEXT} ${ITEM_BASE} ${
+              isVisible ? FADE_IN : FADE_HIDDEN
+            }`}
+          >
+            {data.title}
+          </h2>
+        )}
+
+        {/* BULLET LIST - left and right columns */}
+        <div className={LIST_GRID}>
+          {items.map((item, idx) => (
+            <div
+              key={idx}
+              style={{ transitionDelay: `${idx * STAGGER_MS}ms` }}
+              className={`flex items-start gap-3 leading-relaxed text-slate-700 ${ITEM_TEXT} ${ITEM_BASE} ${
+                isVisible ? FADE_IN : FADE_HIDDEN
+              }`}
+            >
+              {/* BULLET ICON */}
+              <span className="mt-[0.65em] h-2 w-2 shrink-0 rounded-full bg-sky-600" />
+
+              {/* APPLICATION TEXT */}
+              <p className="text-left font-normal text-slate-700">{item}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default FlameGasApplicationsSection;
