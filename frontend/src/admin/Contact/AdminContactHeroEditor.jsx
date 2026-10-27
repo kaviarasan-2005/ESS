@@ -115,7 +115,7 @@ const AdminContactHeroEditor = () => {
     return (
       <div className="flex items-center justify-center p-12 bg-white border border-slate-200 rounded-2xl max-w-4xl mx-auto">
         <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mr-3" />
-        <span className="text-xs font-bold text-slate-500">Loading Contact Hero Settings...</span>
+        <span className="text-xs font-bold text-slate-500">Loading the hero banner...</span>
       </div>
     );
   }
