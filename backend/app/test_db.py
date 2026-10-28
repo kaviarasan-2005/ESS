@@ -3,7 +3,7 @@ import certifi
 from motor.motor_asyncio import AsyncIOMotorClient
 
 # Updated URI with password 'EssProject2026'
-MONGO_URI = "mongodb+srv://itsupportqtr:EssProject2026@cluster0.rpfueke.mongodb.net/ESS?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URI = "mongodb//localhost:27207"
 
 async def test_write():
     print("Connecting to MongoDB Atlas via Motor Async...")
